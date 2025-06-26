@@ -1,5 +1,6 @@
 package org.example.httphandlers
 
+import com.google.inject.Inject
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.response.respond
 import io.ktor.server.routing.RoutingCall
@@ -8,8 +9,9 @@ import org.example.HttpClient
 /**
  * https://open-meteo.com/
  */
-class FetchWeatherHandler() {
-    val httpClient : HttpClient = HttpClient()
+class  FetchWeatherHandler {
+    @Inject
+    lateinit var httpClient: HttpClient
 
     companion object {
         val sampleURL = "https://api.open-meteo.com/v1/forecast?latitude=45.4112&longitude=-75.6981&hourly=temperature_2m,uv_index,apparent_temperature,precipitation_probability,precipitation&timezone=auto&forecast_days=1";
@@ -27,7 +29,7 @@ class FetchWeatherHandler() {
         if (getWeatherDetails == null) {
             call.respond(HttpStatusCode.InternalServerError)
         }
-        call.respond("Got $getWeatherDetails")
+        call.respond("$getWeatherDetails")
     }
 
 

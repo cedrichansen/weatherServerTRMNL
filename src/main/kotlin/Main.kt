@@ -1,5 +1,6 @@
 package org.example
 
+import com.google.inject.Guice
 import io.ktor.server.routing.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
@@ -8,12 +9,15 @@ import org.example.httphandlers.FetchWeatherHandler
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 fun main() {
-
-    val weatherHandler = FetchWeatherHandler()
-    //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-    // to see how IntelliJ IDEA suggests fixing it.
     println("Starting Weather server for TRMNL")
+    val injector = Guice.createInjector(MainGuiceModule())
+    var weatherHandler = injector.getInstance(FetchWeatherHandler::class.java)
 
+    startServer(weatherHandler)
+}
+
+
+fun startServer(weatherHandler : FetchWeatherHandler) {
     embeddedServer(Netty, configure = {
         connectors.add(EngineConnectorBuilder().apply {
             host = "127.0.0.1"
